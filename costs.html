@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Assurance - AssureSphere</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #F8FAFC;
+            color: #0A1F44;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #0A1F44;
+            color: white;
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .sidebar-logo-box {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2D6BFF 0%, #18B67E 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .sidebar-logo-link span {
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #2D6BFF;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #64748b;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .metric-card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-desc {
+            color: #18B67E;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .metric-desc.warning {
+            color: #EF4444;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #F8FAFC 0%, #e2e8f0 100%);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .recommendations {
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            border-left: 4px solid #2D6BFF;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .recommendations h4 {
+            color: #0C4A6E;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendations li {
+            color: #475569;
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .recommendations li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #2D6BFF;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <a href="index.html" class="sidebar-logo-link">
+                <div class="sidebar-logo-box">AS</div>
+                <span>AssureSphere</span>
+            </a>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html">📊 Overview</a></li>
+                <li><a href="contracts.html">📄 Contracts</a></li>
+                <li><a href="costs.html" class="active">💰 Cost Assurance</a></li>
+                <li><a href="dashboard.html">⚡ AI Insights</a></li>
+                <li><a href="dashboard.html">👥 Vendors</a></li>
+                <li><a href="dashboard.html">📈 Reports</a></li>
+                <li><a href="dashboard.html">⚙️ Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+            <div class="header">
+                <h1>Cost Assurance</h1>
+                <p>Identify and eliminate cost leakage</p>
+            </div>
+
+            <!-- METRICS -->
+            <div class="metrics">
+                <div class="metric-card">
+                    <div class="metric-label">Total Spend</div>
+                    <div class="metric-value">$281K</div>
+                    <div class="metric-desc warning">+6% over budget</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Leakage Detected</div>
+                    <div class="metric-value">$12.3K</div>
+                    <div class="metric-desc">Can be recovered</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Savings Achieved</div>
+                    <div class="metric-value">$38K</div>
+                    <div class="metric-desc">From optimizations</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Cost Reduction</div>
+                    <div class="metric-value">13.5%</div>
+                    <div class="metric-desc">Year-over-year</div>
+                </div>
+            </div>
+
+            <!-- CHART -->
+            <div class="chart-card">
+                <h3 class="chart-title">Spend Trend Analysis</h3>
+                <div class="chart-placeholder">📊 Spend Trend Chart (Jan - Jun)</div>
+                
+                <!-- RECOMMENDATIONS -->
+                <div class="recommendations">
+                    <h4>🎯 AI Recommendations</h4>
+                    <ul>
+                        <li>Renegotiate pricing with ACME Corp (potential savings: $5,200)</li>
+                        <li>Consolidate vendor contracts (estimated savings: $3,800)</li>
+                        <li>Implement automated invoice validation</li>
+                        <li>Review subscriptions for unused services (potential: $2,300)</li>
+                        <li>Benchmark telecom services against competitors</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

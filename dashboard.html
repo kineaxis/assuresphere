@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AssureSphere</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #F8FAFC;
+            color: #0A1F44;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #0A1F44;
+            color: white;
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .sidebar-logo-box {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2D6BFF 0%, #18B67E 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .sidebar-logo-link span {
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #2D6BFF;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #64748b;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .metric-card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-icon.primary {
+            background: linear-gradient(135deg, #2D6BFF 0%, #2560ff 100%);
+            color: white;
+        }
+
+        .metric-icon.success {
+            background: linear-gradient(135deg, #18B67E 0%, #15803d 100%);
+            color: white;
+        }
+
+        .metric-icon.warning {
+            background: linear-gradient(135deg, #F59E0B 0%, #f97316 100%);
+            color: white;
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            color: #18B67E;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .metric-change.down {
+            color: #EF4444;
+        }
+
+        .charts {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .chart-subtitle {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #F8FAFC 0%, #e2e8f0 100%);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-text {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .legend-value {
+            font-weight: 600;
+        }
+
+        .alerts-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .alerts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .alerts-header h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .alerts-header a {
+            color: #2D6BFF;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .alerts-list {
+            list-style: none;
+        }
+
+        .alert-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        .alert-item:hover {
+            background: #F8FAFC;
+            border-color: #2D6BFF;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            width: 32px;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-desc {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-time {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 1024px) {
+            .charts {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+            }
+
+            .sidebar-menu {
+                display: none;
+            }
+
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .main {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <a href="index.html" class="sidebar-logo-link">
+                <div class="sidebar-logo-box">AS</div>
+                <span>AssureSphere</span>
+            </a>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html" class="active">📊 Overview</a></li>
+                <li><a href="contracts.html">📄 Contracts</a></li>
+                <li><a href="costs.html">💰 Cost Assurance</a></li>
+                <li><a href="dashboard.html">⚡ AI Insights</a></li>
+                <li><a href="dashboard.html">👥 Vendors</a></li>
+                <li><a href="dashboard.html">📈 Reports</a></li>
+                <li><a href="dashboard.html">⚙️ Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+            <div class="header">
+                <h1>Dashboard</h1>
+                <p>Welcome back! Here's your contract and cost overview.</p>
+            </div>
+
+            <!-- METRICS -->
+            <div class="metrics">
+                <div class="metric-card">
+                    <div class="metric-icon primary">📋</div>
+                    <div class="metric-label">Active Contracts</div>
+                    <div class="metric-value">142</div>
+                    <div class="metric-change">+12%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon success">💰</div>
+                    <div class="metric-label">Cost Identified</div>
+                    <div class="metric-value">$2.3M</div>
+                    <div class="metric-change">-15%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon warning">📉</div>
+                    <div class="metric-label">Avg Risk Score</div>
+                    <div class="metric-value">28</div>
+                    <div class="metric-change down">-22%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon success">✓</div>
+                    <div class="metric-label">Compliance Rate</div>
+                    <div class="metric-value">98%</div>
+                    <div class="metric-change">+8%</div>
+                </div>
+            </div>
+
+            <!-- CHARTS -->
+            <div class="charts">
+                <div class="chart-card">
+                    <h3 class="chart-title">Risk & Compliance Trends</h3>
+                    <p class="chart-subtitle">Last 6 months performance</p>
+                    <div class="chart-placeholder">📊 Chart: Risk Trends (Jan - Jun)</div>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Risk Distribution</h3>
+                    <div class="chart-placeholder" style="height: 200px;">📈 Risk Distribution</div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #18B67E;"></div>
+                            <span class="legend-text">Low</span>
+                            <span class="legend-value">45%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #F59E0B;"></div>
+                            <span class="legend-text">Medium</span>
+                            <span class="legend-value">35%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #EF4444;"></div>
+                            <span class="legend-text">High</span>
+                            <span class="legend-value">15%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #7C3AED;"></div>
+                            <span class="legend-text">Critical</span>
+                            <span class="legend-value">5%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALERTS -->
+            <div class="alerts-card">
+                <div class="alerts-header">
+                    <div>
+                        <h3>Recent Alerts</h3>
+                        <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.25rem;">Contract risks and cost anomalies</p>
+                    </div>
+                    <a href="#">View All →</a>
+                </div>
+                <ul class="alerts-list">
+                    <li class="alert-item">
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Critical: Missing Payment Terms Clause</div>
+                            <div class="alert-desc">Contract #2534 lacks payment terms specification</div>
+                            <div class="alert-time">2 hours ago</div>
+                        </div>
+                    </li>
+                    <li class="alert-item">
+                        <div class="alert-icon">📊</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Vendor Price Increase Detected</div>
+                            <div class="alert-desc">Vendor ACME Corp. exceeded historical pricing by 18%</div>
+                            <div class="alert-time">4 hours ago</div>
+                        </div>
+                    </li>
+                    <li class="alert-item">
+                        <div class="alert-icon">📅</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Renewal Alert: Service Agreement</div>
+                            <div class="alert-desc">Tech Services agreement expires in 30 days</div>
+                            <div class="alert-time">1 day ago</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
